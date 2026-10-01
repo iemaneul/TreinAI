@@ -24,7 +24,7 @@ npm run preview
 
 O SQLite é inicializado no primeiro acesso e salvo como arquivo binário no IndexedDB após cada alteração. O schema, a migração idempotente e os dados iniciais estão em `src/db.ts`. O seed cadastra cinco treinos de segunda a sexta, com oito exercícios em cada. Ao atualizar uma instalação antiga, as sessões anteriores são associadas aos novos IDs dos treinos; exercícios antigos com séries registradas ficam preservados sem vínculo com a rotina atual para manter o histórico.
 
-Os exercícios começam usando `/exercises/placeholder.svg`. Os IDs já usam slugs, como `supino-maquina` e `crucifixo-polia`; ao adicionar um GIF em `public/exercises/`, altere o `gif_url` correspondente no seed para `/exercises/nome-do-arquivo.gif`. Para editar nomes, ordem, séries, repetições, equipamento ou descanso, atualize os dados em `src/db.ts`.
+Os exercícios ainda sem GIF usam `/exercises/placeholder.svg`. Os IDs usam slugs, como `supino-maquina` e `crucifixo`; os GIFs existentes ficam em `public/exercises/`, e seus caminhos são definidos em `gifByExercise` no `src/db.ts`. Para editar nomes, ordem, séries, repetições, equipamento ou descanso, atualize os dados em `src/db.ts`.
 
 A meta inicial está configurada em 45 treinos. Ela pode ser alterada em Configurações e é persistida no próprio banco. Nome exibido também é configurável.
 

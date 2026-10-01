@@ -12,12 +12,12 @@ const seed: SeedWorkout[] = [
   { id:'workout-a', name:'Treino A', muscle:'Peito', day:'Segunda-feira', order:0, exercises:[
     exercise('supino-maquina','Supino Máquina','Peito','Máquina',4,'8–12',60),
     exercise('supino-inclinado-maquina','Supino Inclinado na Máquina','Peito','Máquina',4,'8–12',60),
-    exercise('chest-press','Chest Press','Peito','Máquina',3,'10–12',60),
+    exercise('chest-press','Chest Press (Supino Articulado)','Peito','Máquina',3,'10–12',60),
     exercise('peck-deck','Peck Deck','Peito','Máquina',3,'10–15',60),
-    exercise('crucifixo-polia','Crucifixo na Polia','Peito','Polia',3,'12–15',60),
-    exercise('supino-declinado-maquina','Supino Declinado na Máquina','Peito','Máquina',3,'10–12',60),
+    exercise('crucifixo','Crucifixo','Peito','Polia',3,'12–15',60),
+    exercise('supino-reto-barra','Supino Reto com Barra','Peito','Barra',3,'10–12',60),
     exercise('crucifixo-inclinado-maquina','Crucifixo Inclinado na Máquina','Peito','Máquina',3,'12–15',60),
-    exercise('peito-unilateral-maquina','Peito Unilateral na Máquina','Peito','Máquina',3,'10–12 por lado',60),
+    exercise('supino-inclinado-halteres','Supino Inclinado com Halteres','Peito','Halteres',3,'10–12 por lado',60),
   ]},
   { id:'workout-b', name:'Treino B', muscle:'Costas', day:'Terça-feira', order:1, exercises:[
     exercise('puxada-frontal','Puxada Frontal','Costas','Máquina/Polia',4,'8–12',60),
@@ -60,6 +60,17 @@ const seed: SeedWorkout[] = [
     exercise('triceps-unilateral-polia','Tríceps Unilateral na Polia','Tríceps','Polia',3,'10–15 por lado',60),
   ]},
 ];
+
+const gifByExercise: Record<string,string> = {
+  'supino-maquina':'/exercises/supino-maquina.gif',
+  'supino-inclinado-maquina':'/exercises/supino-inclinado-maquina.gif',
+  'chest-press':'/exercises/chest-press.gif',
+  'peck-deck':'/exercises/peck-deck.gif',
+  'crucifixo':'/exercises/crucifixo.gif',
+  'supino-reto-barra':'/exercises/supino-reto-barra.gif',
+  'crucifixo-inclinado-maquina':'/exercises/crucifixo-inclinado-maquina.gif',
+  'supino-inclinado-halteres':'/exercises/supino-inclinado-halteres.gif',
+};
 
 export function database(): Promise<Database> {
   if (db) return Promise.resolve(db);
@@ -130,7 +141,7 @@ function seedWorkouts(database: Database) {
     database.run(`UPDATE exercises SET workout_id=NULL WHERE workout_id=? AND id NOT IN (${placeholders})`, [workout.id, ...keepIds]);
     workout.exercises.forEach((item, index) => database.run(`INSERT INTO exercises(id,workout_id,name,muscle_group,equipment,description,gif_url,order_index,sets,reps,rest_seconds)
       VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET workout_id=excluded.workout_id,name=excluded.name,muscle_group=excluded.muscle_group,equipment=excluded.equipment,description=excluded.description,gif_url=excluded.gif_url,order_index=excluded.order_index,sets=excluded.sets,reps=excluded.reps,rest_seconds=excluded.rest_seconds`,
-    [item.id, workout.id, item.name, item.muscle, item.equipment, 'Execute o movimento com controle.', '/exercises/placeholder.svg', index, item.sets, item.reps, item.rest]));
+    [item.id, workout.id, item.name, item.muscle, item.equipment, '', gifByExercise[item.id] ?? '/exercises/placeholder.svg', index, item.sets, item.reps, item.rest]));
   }
 }
 
